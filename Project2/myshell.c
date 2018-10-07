@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include "Parse.h"
 #include "InternalCommands.h"
 #include <fcntl.h>
