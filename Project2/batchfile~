@@ -1,0 +1,4 @@
+
+./helloworld
+./helloworld | wc
+./helloworld | wc | wc

@@ -1,0 +1,277 @@
+ /***********************************************************/
+ /***********************************************************/
+ /***********************************************************/
+ /***********************************************************/
+ /************************************************************
+  *                                                          *
+  *                                                          *
+  *PSEUDOCODE FOR PROJECT 2**********PSEUDOCODE FOR PROJECT 2*
+  *                          *                               *
+  *                     LEO VERGNETTI                        *
+  *                     CIS 3207                             *
+  *                     DUE 9/25/18                          *
+  ***********************************************************/
+ /***********************************************************/
+ /***********************************************************/
+ /***********************************************************/
+ /***********************************************************/
+
+
+
+/*  : This pseudocode has already deviated somewhat from the project
+*       and the actual implementation of some of this is
+*       already different than listed in here.  There's a limit to how
+*       accurately i can guess how this stuff is gonna play out without
+*       actually seeing the code.  I haven't changed it in here
+*       retroactively */
+ /* NOTE NOTE NOTE NOTE
+  * This is the psuedocode for project2.  In some parts the code
+  * is almost in c (such as some variable/ constant declarations) where the c is
+  * particularly clear (IE the pause method), or where attempting
+  * to word something made what was happening less clear (such as
+  * referring to pipe() method or distinguishing between various arrays
+  * such as commandsToBeExecuted vs userInput vs etc
+  * Currently i left everything here in shell.c in comments, since
+  * it makes it particularly easy for me to look back on the other
+  * methods and see how it should fit together.
+  * For this pseudocode, all methods are grouped together in this single
+  * shell file.  Ideally the planned shell will be split into
+  * several files:
+  * FILE 1: main shell file will hold main loop: as even in pseudocode
+  *         the main loop is pretty long, i have to figure it's gonna take
+  *         up some space. Also will hold init method and method to grab
+  *         user input.
+  * FILE 2: the parser(s) will be put in a separate file.  Methods associated
+  *         with parsing/ separating will be put in this file. This refers to
+  *
+  * FILE 3: file dedicated to internal command methods.
+  *
+  */
+
+
+/*Constants*/
+//NONE = 0
+//CD = 1
+//CLR = 2
+//DIR = 3
+
+//listOfCommands : String Array = {"none", "cd", "clr", "dir", "environ",
+//           "echo", "help" "pause", "quit" }
+
+
+/***********************************************************
+ METHOD main loop of the shell, it is designed to handle
+ an aribitrary (up to a limit m) number of chained pipe
+ commands, as well as support combination of chains/redirected
+ input and output. First the parser determines the number of pipe
+ symbols (and thus the number of pipes required).  In the first
+ fork, the parent waits (or not).  The child redirects its input
+ (if required), and if piping, loops, linking the pipe, creating
+ a child, closing the unused pipe ends, and then calling execvp.
+ If on the last iteration through the loop, we check if output
+ should be redirected, and if so, we redirect it to the specified
+ file. The counter is incremented.
+ ***********************************************************/
+//fileToRedirectInput: file
+//fileToRedirectOutput: file
+//commandsToBeExecuted 5: string array (will support piping up to five(arbitrary) commands)
+//
+//runInBackground: integer
+//clear the screen
+//loop indefinitely
+//  userInput = getInputFromUser(): String
+//  set runInBackground by calling parseForBackground(userInput)
+//  set numberOfPipes and set commandsToBeExecuted:String[] by calling parseForPipes(userInput, commandsToBeExecuted)
+//
+//  set fileToRedirectInput: FILE by calling parseForRedirectedInput(commandsToBeExecuted)
+//  set fileToRedirectOuput: FILE by calling parseForRedirectedOutput(commandsToBeExecuted)
+//      IF the commandsToBeExecuted[0][0] is an internal command
+//          executeInternalCommand(getInternalCommand(command[i]), fileToRedirectOutput)
+//      ELSE
+//          FOR every command[i][0] in commandsToBeExecuted
+//              get their absolute path
+//          forkResult = FORK()
+//          IF PARENT (forkResult != 0)
+//              IF runInBackground is set to false
+//                  WAIT for child to terminate
+//          IF CHILD (forkResult equals 0)
+//              IF fileToRedirectInput
+//                  replace stdin with that file
+//              IF we are using pipes
+//                  numberOfPipes = number of commands in commandsToBeExecuted
+//                  thePipes[2][numberOfPipes]: int[][] *******2D int array to hold pipes**
+//                  i = 0
+//                  WHILE there are pipes in thePipes array
+//                      pipe(thePipe[i]) (Creating the pipe)
+//                      FORK()
+//                      IF PARENT (from the most recent fork)
+//                          close the read pipe (pipe[i][1])
+//                          replace stdout with write pip (pipe[i][0]
+//                          call execvp with commandsToBeExecuted[i] and path
+//                      IF CHILD (from the most recent fork)
+//                          close the write pipe (pipe[i][1])
+//                          replace stdin with read pipe (pipe[i][0]
+//                          IF this is the last time through the loop
+//                              IF fileToRedirectOutput isn't NULL
+//                                  replace stdout with fileToRedirectOutput
+//                              call execvp with commandsToBeExecuted[i]
+//                      INCREMENT i
+
+
+/***********************************************************
+ *METHOD parseForBackground checks if the method should
+ be run in the backround.  If yes, it updates the inputString,
+ and returns Yes. Else returns No
+ INPUT: userInput: String
+ OUTPUT: 0 if no, 1 if yes
+ ***********************************************************/
+//runInBackground = 0 : int
+//use contains to see if string has "&"
+//IF & is in the userInput
+//  use strsep to remove the "&"
+//  use strcpy to copy the new string to userInput
+//  runInBackground = 1 (YES)
+//RETURN runInBackground
+
+
+/***********************************************************
+ METHOD parseForPipes takes the userInput and commandstoBeExecuted,
+ array.  Uses strsep to parse the input string.  Each string is
+ copied to the commandsToBeExecuted array.
+ NOTE: commands still contain possible redirects
+ INPUT: user input: string, commandsToBeExecuted: string array
+ OUTPUT: number of pipes: integer
+ SIDE EFFECT: populates commandsToBeExecuted
+ ***********************************************************/
+//numberOfPipes: integer
+//WHILE each separated string isn't NULL (strsep call)
+    //COPY separated string to commandsToBeExecuted at that index. (strcpy call)
+    //INCREMENT numberOfPipes
+//return numberOfPipes
+
+
+/***********************************************************
+ METHOD parseForRedirectedInput
+ INPUT: fileName: string pointer, string array containing commands to be piped
+ OUTPUT: filename of file to get input from (OR NULL)
+ SIDEEFFECT: filename and < are removed from array.
+ ***********************************************************/
+//set value of filePointer = NULL
+// IF each separated string isn't null (strsep on "<")
+    //COPY first separated string into commandsToBePiped
+//  IF second string isn't NULL (strsep on "<")
+//      set value of filePointer to second string
+//return filePointer
+
+/***********************************************************
+ METHOD parseForRedirectedOutput
+ INPUT: string array containing commands to be piped
+ OUTPUT: filename of file to get output from (OR NULL)
+ SIDEEFFECT: filename and >/>> are removed from array
+ ***********************************************************/
+//set value of filePointer = NULL
+// IF each separated string isn't null (strsep on ">>")
+//COPY first separated string into commandsToBePiped
+//  IF second string isn't NULL (strsep on ">>")
+//      set value of filePointer to second string
+//return filePointer
+
+/***********************************************************
+ METHOD getInternalCommand to get command from list
+ (NOTE: MAY be more elegant to do all from executeInternalCommand)
+ //INPUT: userCommand : string
+ //INPUT: redirected
+ ***********************************************************/
+//FOR every internalCommand in internalCommands
+//  IF compare(userCommand and internalCommand are equal (strcmp))
+//      RETURN index
+//RETURN 0
+
+
+/***********************************************************
+ METHOD executeInternalCommand executes a command defined
+ by the integer value.  There is no output to this method
+ but the appropriate method is called for each
+ NOTENOTENOTE: MUST BREAK AFTER EACH LINE (:D I'm gonna forget this)
+ //INPUT: commandIndex: int, argv: string array
+ ***********************************************************/
+//Switch on commandIndex
+//  Case 1: cd(argv)
+//  Case 2: clr()
+//  Case 3: dir(argv)
+//  Case 4: environ()
+//  Case 5: echo(argv)
+//  Case 6: help()
+//  Case 7: pause()
+//  Case 8: quit()
+
+
+/***********************************************************
+ METHOD clr clears the display CURRENTLY prints lines to the
+ screen but chenglong gave code in ppt somewhere to do it
+ with single sequence
+ ***********************************************************/
+//print new lines until screen is empty: 25(?)
+
+
+/***********************************************************
+ //METHOD cd changes the current working directory
+ // uses CHDIR in unistd
+ //INPUT: args: string array
+ ***********************************************************/
+//separate newLine character from args[1] (strsep)
+//set somethingWentWrong to chdir system call on the separated string
+//IF somethingWentWrong print to the screen
+
+
+/***********************************************************
+ METHOD dir prints the contents of the directory
+ by using ls program
+ INPUT: array of string args for function, FILE
+ ***********************************************************/
+//get Absolute path of ls
+//fork()
+//IF parent wait for child to finish
+//IF child
+//  if FILE isn't NULL
+//  redirect stdout to FILE
+//  call execvp with absolute path and args.
+
+
+/***********************************************************
+ METHOD environ() prints all environment variables.  This
+ method just iterates the environ list, printing and
+ incrementing as it goes.
+ ***********************************************************/
+//char *environ[]
+//init a counter to 0
+//WHILE there are additional strings in environ
+//  printf(environ[i])
+//  increment i
+
+
+/***********************************************************
+ METHOD echo(argv) prints the argument using printf
+ ***********************************************************/
+//printf(argv[1])
+
+
+/***********************************************************
+ METHOD help
+ ***********************************************************/
+//get a file to readme
+//open readme
+//print it line by line.
+
+/***********************************************************
+ METHOD pause reads from stdin, when return is pressed,
+ continues operation.  I think fgets is blocking anyway, so
+ this should just read the line and then ignore it
+ ***********************************************************/
+//read input line using fets
+
+
+/***********************************************************
+ METHOD quit exits program using stdlib exit
+ ***********************************************************/
+//exit(0)

@@ -1,0 +1,16 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "Parse.h"
+
+int main(){
+  char* string =strdup("helloworld&");
+  printf("FROM DRIVER PRE: %s\n", string);
+  printf("Run in Background?: %d\n", parseForBackground(&string));
+  printf("FROM DRIVER POST: %s\n", string);
+  string = strdup("helloworld");
+  printf("FROM DRIVER PRE: %s\n", string);
+  printf("Run in Background?: %d\n", parseForBackground(&string));
+  printf("FROM DRIVER POST: %s\n", string);
+
+}

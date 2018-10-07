@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
+static void clr();
+
+int main(){
+  char line1[50];
+  char pwd[1024];
+  extern char ** environ;
+  int i = 0;
+  clr();
+  while (environ[i]!=NULL){
+    printf("%s\n", environ[i]);
+    i++;
+  }
+  getcwd(pwd, 1024);
+  printf("%s> ", pwd);
+    while(fgets(line1, 50, stdin)){
+      if(strcmp(line1, "exit\n")==0){
+	break;
+      }
+      
+    printf("%s> ", pwd);
+    }
+    printf("EXITING SYSTEM!\n");
+}
+
+static void echo(char *line){
+  printf("%s", line);
+}
+
+static void clr(){
+  printf("\033[H\033[2J");
+}

@@ -1,0 +1,12 @@
+cd
+cd cis3207/project2
+dir
+help
+./helloworld
+./helloworld | wc
+./helloworld | wc | wc
+ls
+dir
+./helloworld | wc > output.txt
+more output.txt
+q
