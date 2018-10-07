@@ -7,6 +7,9 @@ help
 ./helloworld | wc | wc
 ls
 dir
+pause
+
+
 ./helloworld | wc > output.txt
 more output.txt
 q

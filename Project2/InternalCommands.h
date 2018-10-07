@@ -12,12 +12,13 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int executeInternalCommand(char ** argv);
+int executeInternalCommand(char** argv, char* outputFile, int appendMode);
+void setBatchfile(FILE * file);
 void cd(char **argv);
 void clr();
-void echo(char **argv);
-void printEnviron();
+void echo(char **argv, char* fileName, int appendMode);
+void printEnviron(char* fileName, int appendMode);
 void shellPause();
-void printDir(char ** argv);
+void printDir(char **argv, char* fileName, int appendMode);
 #endif /* InternalCommands_h */
 

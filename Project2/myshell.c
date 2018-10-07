@@ -49,7 +49,7 @@ void initEnvironment(){
  *input char** argv: string array containing commandline args
  *************************************************************/
 void mainLoop(int argc, char** argv){
-    int executionMode = 0;
+    int batchfileMode = 0;
     FILE *fp = 0;
     //If attempting to execute from batch file
     if(argc > 1){
@@ -61,6 +61,10 @@ void mainLoop(int argc, char** argv){
             printf("ERROR opening %s : using stdin\n", argv[1]);
             batchfileMode = 0;
             fp = stdin;
+        }
+        else{
+            //sets batchfile pointer in internal command (else pause command waits for \n)
+            setBatchfile(fp);
         }
     }
     //otherwise set the file to stdin
@@ -99,7 +103,7 @@ void mainLoop(int argc, char** argv){
             appendMode = parseForRedirectedIO(commandsToBeExecuted, &inputFile, &outputFile, numPipes);
             parseCommandListForArgs(commandsToBeExecuted, fullCommandsToBeExecuted, fullArgCount);
             //Attempt to execute an internal command. executeInternalCommand returns 0 if it does not find a cmd
-            int resultOfInternalCommand = executeInternalCommand(fullCommandsToBeExecuted[0]);
+            int resultOfInternalCommand = executeInternalCommand(fullCommandsToBeExecuted[0], outputFile, appendMode);
             //IF not an internal command prepare to execute external command
             if (!resultOfInternalCommand){
                 int forkResult;
@@ -126,6 +130,8 @@ void mainLoop(int argc, char** argv){
                         printf("Error occured during fork\n");
                     } else if(forkResult == 0){
                         //child
+                        //set(create) "PARENT" environment string
+                        setenv("PARENT", getenv("SHELL"), 1);
                         //If we are currently at the first item in the pipe chain, we can take our input from a file
                         if(i == 0 && inputFile){
                             redirectInput(inputFile);
@@ -203,6 +209,7 @@ void redirectOutput(char* outputFile, int append){
     }
     else{
     newstdout = open(outputFile,O_WRONLY|O_CREAT,S_IRWXU|S_IRWXG|S_IRWXO);
+        ftruncate(newstdout, 0);
     }
  close(1);
  dup2(newstdout, 1);
