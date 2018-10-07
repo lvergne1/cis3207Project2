@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <sys/wait.h>
 #include "Parse.h"
 #include "InternalCommands.h"
 #include <fcntl.h>
