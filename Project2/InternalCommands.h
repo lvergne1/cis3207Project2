@@ -20,5 +20,6 @@ void echo(char **argv, char* fileName, int appendMode);
 void printEnviron(char* fileName, int appendMode);
 void shellPause();
 void printDir(char **argv, char* fileName, int appendMode);
+void shellHelp();
 #endif /* InternalCommands_h */
 

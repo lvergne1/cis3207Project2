@@ -56,15 +56,30 @@ int executeInternalCommand(char** argv, char* outputFile, int appendMode){
         printDir(argv, outputFile, appendMode);
     }
     else if(strcmp(argv[0], "help")== 0){
-        result = 0;
-        argv[0] = strdup("more");
-        argv[1] = strdup("readme");
+        result = 7;
+        shellHelp();
     }
     else if(strcmp(argv[0], "pause")==0){
         result = 8;
         shellPause(argv);
     }
     return result;
+}
+
+
+
+/*************************************************************
+ *METHOD: shellHelp() prints the readme document to the screen.
+ *Can be redirected
+ *************************************************************/
+void shellHelp(){
+    FILE * rm;
+    char word[500];
+    rm = fopen(getenv("README"), "r");
+    while(fgets(word, 500, rm)){
+        printf("%s", word);
+    }
+    fclose(rm);
 }
 
 

@@ -29,6 +29,8 @@ void startShell(int argc , char** argv){
 void initEnvironment(){
     char pwd[1024];
     getcwd(pwd, 1024);
+    char* pwdcpy = strdup(pwd);
+    setenv("README", strcat(pwdcpy, "/readme"), 1);
     setenv("SHELL", strcat(pwd, "/myshell"), 1);
 }
 
