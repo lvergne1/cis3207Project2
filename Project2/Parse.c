@@ -271,7 +271,7 @@ void testParseCommandListForArgs(){
         parseCommandListForArgs(commandsToBeExecuted, fullCommandsToBeExecuted, fullArgCount);
         i = 0;
         int k = 0;
-        while(fullCommandsToBeExecuted[i][k]!= NULL){
+        while(i <= numPipes){
             printf("Command %d has %d args\n",i+1, fullArgCount[i]);
             while(fullCommandsToBeExecuted[i][k]!= NULL){
                 printf("%s\n", fullCommandsToBeExecuted[i][k]);

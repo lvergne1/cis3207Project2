@@ -1,0 +1,67 @@
+LEO VERGNETTI'S SHELL USER MANUAL
+.
+.
+.
+The following manual is intended to be used as a guide to using myshell.
+myshell interprets commands typed by the user and can be used to launch 
+programs, such as programs to add or remove directories, list files.  
+The user must type 1 (or more) commands followed by the 'return' key.  The shell will then execute the given commands. The path of the current directory is listed on each line to signal to the user it is ready for a command. If, for example, the program 'helloworld' was located in the current directory, './helloworld (return)' executes the program helloworld.
+*************************************************************
+INTERNAL COMMANDS
+myshell supports the following internal commands (listed with a description).
+1. quit
+2. clr
+3. help
+4. cd
+5. dir
+6. pause
+7. echo
+8. environ
+*
+DESCRIPTION OF INTERNAL COMMANDS
+*
+1. quit: The 'quit' command stops execution of shell.  ctrl d may also be used to exit the shell. The quit command must be terminated with a 'return'.
+
+2. clr: clears the screen of all text, displaying the current directory.
+
+3. help: help displays this manual to the user.
+
+4. cd: cd changes directory.  It may take an argument to in several forms:
+   a: 'cd' with no arguments returns to the user's home directory
+   b: 'cd directory1' changes to directory1 if it can be found. so 'cd /' returns user to root directory.
+
+5. dir: lists the content of a chosen directory. Output redirection is supported (See input and output redirection (2) below)
+   a: 'dir' with no arguments lists the contents of the current directory
+   b: 'dir directory1' lists the contents of directory1, where directory1 is an absolute pathname.
+
+6. pause: 'pause' pauses execution of the shell. The user may continue by pressing the 'return' key.
+
+7. echo: 'echo' displays the entered text from the from user back to the screen.  So 'echo today' will print 'today' to the line.  White spaces will be truncated to single white space characters. Output redirection supported for this command (see input and output redirection (2) below).
+
+8. environ: environ lists the various enviroment strings in the shell.  These environment strings contain information (such as the current working directory) as to the current state of the shell.  'environ' lists all such strings, one per each line.  Output redirection is supported (see Input and output redirection (2) below).
+
+*********************************************
+FEATURES
+
+myshell also supports the following features
+1. background execution
+2. Input and output redirection
+3. Piped and piping commands
+*
+DESCRIPTION OF SUPPORTED FEATURES
+*
+1. background execution: background execution allows the shell to run a program, and continue to execute without waiting for that program to finish. This is done simply by placing the '&' at the end of the line the user wishes to run in the background.  So '.\helloworld &' will launch the program helloworld, and continue getting input from the user without waiting for a helloworld to terminate.
+
+2. Input and output redirection: The user may also redirect input and output from a program using the <,  > , and >> symbols
+   a. < : This is the input redirection operator. So 'command < inputFile.txt' will run command reading from inputFile.txt.  
+   b. > : This is the output redirection operator.  So 'command > outputFile.txt' will launch command writing its output to outputFile.txt. If no file exists at 'outputFile.txt', one will be created, and written to. 
+   c. >> : Similar to above, but this operator will append to the file 'outputfile.txt' if it already exists  rather than overwriting it . 
+
+3. Piped and piping commands is also supported in the shell.  This is similar to an output redirection, however rather than taking input from a file, input is taken from another program. The current shell supports execution of up to 10 piped commands.  The format for a command is 'command1 | command2', which can be read as take the output from command1, and feed it as input to command2. 
+NOTE: The user can also redirect input from the first command and output from the last command in a piped command chain.  So, 'command 1 < inputfile | command2 | command3 > outputfile.txt' will take command1 input from input file, pipe it to command2 as input, command2 executes and pipes its output to command3, command3 executes and writes its ouptut to outputfile.txt
+
+*****************************************
+A NOTE ON BATCHFILE EXECUTION:
+
+myshell can also be executed with a file, and read its input from this file.  This is done by running the myshell program with a file argument.  that is : './
+myshell file' will initialize the shell to read commands from that file.  myshell terminates upon reading the end of the file. If unable to open the file, myshell will execute with its input set to the keyboard (stdin).
