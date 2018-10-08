@@ -108,7 +108,9 @@ void printDir(char **argv, char* fileName, int appendMode){
             printf("%s\n", s->d_name);
         }
     }
-    fclose(outputFile);
+    if(outputFile){
+        fclose(outputFile);
+    }
 }
 /*************************************************************
  *METHOD: printEnviron prints the environment strings to the
@@ -141,11 +143,11 @@ void printEnviron(char* fileName, int appendMode){
         i++;
     }
     //if opened, close file
-    if(fileName){
+    if(outputFile){
         fclose(outputFile);
     }
 }
- 
+
 /*************************************************************
  *METHOD: printEnviron prints the environment strings to the
  * screen (or file) using external character environ.
@@ -206,7 +208,9 @@ void echo(char **argv, char* fileName, int appendMode){
     }
     
     //close output file
-    fclose(outputFile);
+    if(outputFile){
+        fclose(outputFile);
+    }
 }
 
 /*************************************************************
