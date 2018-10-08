@@ -56,14 +56,15 @@ int executeInternalCommand(char** argv, char* outputFile, int appendMode){
         printDir(argv, outputFile, appendMode);
     }
     else if(strcmp(argv[0], "help")== 0){
-        result = 7;
-        printf("help\n");
+        result = 0;
+        argv[0] = strdup("more");
+        argv[1] = strdup("readme");
     }
     else if(strcmp(argv[0], "pause")==0){
         result = 8;
         shellPause(argv);
     }
-    return result   ;
+    return result;
 }
 
 

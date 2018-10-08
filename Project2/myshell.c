@@ -27,7 +27,8 @@ void startShell(int argc , char** argv){
  *as well as setting the shell environment variable (passed to future children)
  *************************************************************/
 void initEnvironment(){
-    char* pwd = strdup(getenv("PWD"));
+    char pwd[1024];
+    getcwd(pwd, 1024);
     setenv("SHELL", strcat(pwd, "/myshell"), 1);
 }
 
@@ -218,7 +219,6 @@ void redirectOutput(char* outputFile, int append){
 
 /*************************************************************
  *METHOD: redirectInput opens the inputFile for read only
- 
  *input: inputFile : string has value of inputFile (may be unset)
  *************************************************************/
 void redirectInput(char *inputFile){
